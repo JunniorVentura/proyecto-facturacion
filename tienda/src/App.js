@@ -264,9 +264,21 @@ function App() {
         try {
             const formData = new FormData();
             formData.append("boucher", boucher);
+            formData.append("codigo", codigoPedido);
+            formData.forEach((value, key) => {
+                console.log("Clave:", key, "Valor:", value);
+            });
+            
+            if (!boucher || !(boucher instanceof File)) {
+                console.error("El archivo boucher no es válido.");
+                return;
+            }        
+
+            console.log("Enviando FormData a producer.php...");
             const boucherResponse = await axios.post(`${BASE_URL}/producer.php`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
+            console.log("Respuesta del servidor:", boucherResponse.data);           
 
             if (!boucherResponse.data.boucher_path) {
                 alert("Error al subir el boucher.");
@@ -473,7 +485,7 @@ function App() {
         </div>
         <div className="container-pay">
             <label>Método de Pago:</label>
-            <select value={metodoPago} onChange={(e) => setMetodoPago(e.target.value)}>
+            <select value={metodoPago || ""} onChange={(e) => setMetodoPago(e.target.value)}>
                 <option value="">Seleccione un método de pago</option>
                 <option value="deposito">Depósito</option>
                 <option value="transferencia">Transferencia</option>

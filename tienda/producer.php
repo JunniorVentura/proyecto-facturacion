@@ -126,10 +126,11 @@ if (!is_dir($uploadDir)) {
 }
 
 // Verificar que la solicitud es POST y que los datos están presentes
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['boucher']) && isset($_POST['codigo_pedido'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['boucher']) && isset($_POST['codigo'])) {
+
     header('Content-Type: application/json'); // Asegurar respuesta en JSON
 
-    $codigoPedido = preg_replace('/[^a-zA-Z0-9]/', '_', $_POST['codigo_pedido']); // Sanitizar código
+    $codigoPedido = preg_replace('/[^a-zA-Z0-9]/', '_', $_POST['codigo']); // Sanitizar código
     $randomNumber = rand(1000, 9999); // Número aleatorio para evitar colisiones
 
     // Validar errores en la subida del archivo
@@ -168,7 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['boucher']) && isset(
 
 // Leer JSON del pedido
 $data = json_decode(file_get_contents("php://input"), true);
-echo json_encode("datos recibidos: "=>$data);
 if (!$data || !isset($data['codigo_usuario'], $data['nombre_usuario'], $data['email'], $data['celular'], $data['codigo'], $data['precio_total'], $data['productos'], $data['boucher_path'], $data['metodo_pago'])) {
     echo json_encode(["error" => "Datos incompletos"]);
     exit;
